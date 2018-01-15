@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace Com.GitHub.ThreePrime.BaseOptimizer {
     static class Program {
@@ -61,6 +62,14 @@ namespace Com.GitHub.ThreePrime.BaseOptimizer {
                 }
             }
             Console.WriteLine(Format[0]);
+            TextWriter stdout = Console.Out;
+            using (MemoryStream fakeStream = new MemoryStream()) {
+                using (TextWriter writer = new StreamWriter(fakeStream)) {
+                    Console.SetOut(writer);
+                    Test("int", (a, b) => a + b, int.MaxValue, uint.MaxValue, 4);
+                    Console.SetOut(stdout);
+                }
+            }
             Test("sbyte", (a, b) => (sbyte) (a + b), sbyte.MaxValue, byte.MaxValue, 1);
             Test("byte", (a, b) => (byte) (a + b), byte.MaxValue, byte.MaxValue, 1);
             Test("short", (a, b) => (short) (a + b), short.MaxValue, ushort.MaxValue, 2);
